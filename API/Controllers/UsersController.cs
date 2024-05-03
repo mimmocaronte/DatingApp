@@ -1,13 +1,13 @@
 ﻿using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")] // NOTA mettendo controller tra quadre corrisponde a api/users (prende il nome della class senza Controller)
-public class UsersController : ControllerBase
+[Authorize]
+public class UsersController : BaseApiController
 {
     private readonly DataContext _context;
 
@@ -16,6 +16,7 @@ public class UsersController : ControllerBase
         _context = context;
     }
 
+    [AllowAnonymous] //questo vuol dire che non ha bisogno di autenticazione\token
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
@@ -24,6 +25,7 @@ public class UsersController : ControllerBase
         return users;
     }
 
+    // [Authorize] //aggiugendo questo attributo un utente portà fare questa chiamata solo se trasmette as serve API un token di autenticazione
     [HttpGet("{id}")] //corrisponde ad esempio a /api/users/2
     public async Task<ActionResult<AppUser>> GetUser(int id)
     {
