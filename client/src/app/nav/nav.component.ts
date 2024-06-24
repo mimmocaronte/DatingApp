@@ -27,8 +27,8 @@ export class NavComponent implements OnInit {
       next: () => {
         this.toast.success('Loggato con successo!'),
         this.router.navigateByUrl('/members')
-      },
-      error: error => this.toast.error(error.error)
+      }
+      //error: error => this.toast.error(error.error) //Non voglio gestire questo errore a vide, basta far vedere il 401 Unauthorazied
     })
   }
 
