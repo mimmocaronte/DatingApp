@@ -44,4 +44,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//riempiamo il DB. Il codice del Seed è fatto in modo che se esistono già gli Users non li reinserisce
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during migration");
+}
+
 app.Run();
